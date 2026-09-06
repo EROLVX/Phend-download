@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -218,7 +218,13 @@ function ScatteredTile({
 }
 
 export function BrowserCompatibility() {
-  const reduceMotion = useReducedMotion() ?? false;
+  const prefersReduced = useReducedMotion();
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+  const reduceMotion = isClient && !!prefersReduced;
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,

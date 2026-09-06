@@ -17,7 +17,7 @@ const rows = [
   {
     icon: Cpu,
     label: "Model version",
-    detail: "Read-only — managed centrally from the admin dashboard.",
+    detail: "Read-only — published from the admin dashboard, pulled on Sync now.",
     value: "Vexa-1 Beta · v1.0",
   },
 ];
@@ -35,10 +35,9 @@ export function AutoUpdates() {
               The extension doesn&apos;t have to.
             </h2>
             <p className="mt-5 max-w-md text-white/55">
-              Trusted domains, the blocklist, detection rules, and the ML
-              model all sync from the cloud automatically. Hit{" "}
-              <span className="text-white/80">Sync now</span> in Settings any
-              time, or let it happen on its own.
+              Trusted domains, the blocklist, and detection rules sync from the
+              cloud automatically. The ML model updates when you press{" "}
+              <span className="text-white/80">Sync now</span> in Settings.
             </p>
 
             <div className="mt-8 flex items-start gap-3 rounded-xl border border-info/20 bg-info/[0.06] p-4">

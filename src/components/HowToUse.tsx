@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import { Reveal } from "@/components/ui/Reveal";
+import { cn } from "@/lib/utils";
 import {
   ScanLine,
   ShieldAlert,
@@ -16,56 +20,56 @@ const features = [
     title: "Automatic scanning",
     description:
       "Every site you visit is scanned in the background and blocked before it fully loads if it looks like phishing.",
-    ghostSize: 92,
+    ghostSize: 300,
   },
   {
     icon: ShieldAlert,
     title: "Safe, Phishing & Suspicious verdicts",
     description:
       "Each result comes with a confidence score and the plain-language reasons behind it — domain length, URL length, path length, and more.",
-    ghostSize: 124,
+    ghostSize: 330,
   },
   {
     icon: MonitorSmartphone,
     title: "Toolbar popup",
     description:
       "A one-click view of the current site's verdict, a protection toggle, and your session stats — scans, threats blocked, sites trusted.",
-    ghostSize: 104,
+    ghostSize: 315,
   },
   {
     icon: PanelRight,
     title: "Side panel analysis",
     description:
       "Go deeper with the full scan timeline across the Rule, ML, DOM, and Decision engines, plus a breakdown of threat details.",
-    ghostSize: 116,
+    ghostSize: 322,
   },
   {
     icon: AlertTriangle,
     title: "Full-page warning",
     description:
       "Confirmed phishing pages are covered by a warning screen with Block, Back to Safety, or Continue at your own risk.",
-    ghostSize: 100,
+    ghostSize: 308,
   },
   {
     icon: Settings,
     title: "Settings",
     description:
       "Toggle protection and notifications, trigger a manual sync, and check your rule, config, and model versions.",
-    ghostSize: 132,
+    ghostSize: 330,
   },
   {
     icon: ShieldCheck,
     title: "Trusted domains & blocklist",
     description:
       "Manage your own Allowlist and Blocklist, search saved domains, and review scan history — all in one place.",
-    ghostSize: 108,
+    ghostSize: 315,
   },
   {
     icon: MessageCircle,
     title: "Feedback & local data",
     description:
       "Send a bug report or suggestion straight from settings, or clear locally cached scan history at any time.",
-    ghostSize: 96,
+    ghostSize: 300,
   },
 ];
 
@@ -119,6 +123,8 @@ function JigsawCorner({ id }: { id: string }) {
 }
 
 export function HowToUse() {
+  const [active, setActive] = useState(0);
+
   return (
     <section
       id="how-it-works"
@@ -158,29 +164,83 @@ export function HowToUse() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature, i) => (
-            <Reveal key={feature.title} delay={(i % 4) * 0.05}>
-              <div className="group relative h-full overflow-hidden border border-white/[0.07] bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.15] hover:bg-card-hover lg:min-h-[192px]">
-                <JigsawCorner id={`how-jigsaw-${i}`} />
+        <Reveal delay={0.1}>
+          <div className="mt-14 flex flex-col gap-2 lg:h-[400px] lg:flex-row lg:gap-3">
+            {features.map((feature, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  key={feature.title}
+                  type="button"
+                  onClick={() => setActive(i)}
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  aria-expanded={isActive}
+                  className={cn(
+                    "group relative flex flex-col overflow-hidden border p-5 text-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:min-w-0",
+                    isActive
+                      ? "border-info/45 bg-info/[0.07] shadow-[inset_0_1px_0_0_rgba(59,130,246,0.28)] lg:flex-[6] lg:justify-end lg:p-9"
+                      : "border-white/[0.07] bg-card hover:border-white/[0.18] hover:bg-card-hover lg:flex-[0.35] lg:px-4"
+                  )}
+                >
+                  {isActive && <JigsawCorner id={`how-jigsaw-${i}`} />}
 
-                <feature.icon
-                  strokeWidth={1}
-                  style={{ width: feature.ghostSize, height: feature.ghostSize }}
-                  className="pointer-events-none absolute -bottom-5 -right-5 text-white/[0.05] transition-colors duration-300 group-hover:text-white/[0.14]"
-                  aria-hidden
-                />
+                  {isActive && (
+                    <feature.icon
+                      strokeWidth={1}
+                      style={{
+                        width: feature.ghostSize,
+                        height: feature.ghostSize,
+                      }}
+                      className="pointer-events-none absolute -bottom-[18%] -right-[14%] hidden text-info/[0.16] lg:block"
+                      aria-hidden
+                    />
+                  )}
 
-                <p className="relative text-[15px] font-medium text-white">
-                  {feature.title}
-                </p>
-                <p className="relative mt-2 text-[13.5px] leading-relaxed text-white/45">
-                  {feature.description}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+                  <div
+                    className={cn(
+                      "relative flex items-center gap-3 lg:flex-col lg:gap-5",
+                      isActive
+                        ? "animate-panel-in lg:items-start"
+                        : "lg:items-center"
+                    )}
+                  >
+                    <feature.icon
+                      size={isActive ? 26 : 18}
+                      strokeWidth={1.6}
+                      className={cn(
+                        "shrink-0 transition-colors duration-300",
+                        isActive
+                          ? "text-info"
+                          : "text-white/40 group-hover:text-white/70"
+                      )}
+                    />
+                    <p
+                      className={cn(
+                        "font-medium transition-colors duration-300",
+                        isActive
+                          ? "text-[17px] text-white lg:text-[27px] lg:leading-tight lg:tracking-tight"
+                          : "text-[15px] text-white/70",
+                        // Collapsed panels are narrow strips on desktop, so the
+                        // label runs bottom-to-top down the strip instead.
+                        !isActive &&
+                          "lg:rotate-180 lg:whitespace-nowrap lg:[writing-mode:vertical-rl]"
+                      )}
+                    >
+                      {feature.title}
+                    </p>
+                  </div>
+
+                  {isActive && (
+                    <p className="animate-panel-in-late relative mt-3 max-w-xl text-[14px] leading-relaxed text-white/65 lg:mt-5 lg:text-[17px] lg:leading-[1.75]">
+                      {feature.description}
+                    </p>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

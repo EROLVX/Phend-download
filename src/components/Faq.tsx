@@ -12,12 +12,16 @@ const faqs = [
     a: "No. Phend runs entirely on-device with no sign-up, login, or account of any kind required to use it.",
   },
   {
+    q: "Can I install Phend on my phone?",
+    a: "No — Phend is desktop only. Chrome and Edge on Android and iOS don't support Manifest V3 extensions at all, so there is no mobile build and no way to sideload one. Phend runs on Chrome or Edge for Windows, macOS, and Linux.",
+  },
+  {
     q: "Does it work offline?",
     a: "Core scanning runs locally using the rules and model already synced to your device. Fetching new rules, blocklist entries, or model updates requires an internet connection.",
   },
   {
     q: "How do I update?",
-    a: "Detection rules, the blocklist, trusted domains, and the ML model sync automatically from the cloud — no action needed. Only the extension itself requires downloading a newer ZIP from this page and reloading it as unpacked.",
+    a: "Detection rules, the blocklist, and trusted domains sync automatically from the cloud. The ML model does not — when a newer one is published, Phend asks whether you want to update the model now or leave it for later, and you can always pull it yourself with Sync now in Settings. Only the extension itself requires downloading a newer ZIP from this page and reloading it as unpacked.",
   },
   {
     q: "How do I uninstall?",

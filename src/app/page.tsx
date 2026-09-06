@@ -16,12 +16,12 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <DownloadSection />
         <BrowserCompatibility />
         <InstallGuide />
         <HowToUse />
         <AutoUpdates />
         <Faq />
+        <DownloadSection />
       </main>
       <Footer />
     </>

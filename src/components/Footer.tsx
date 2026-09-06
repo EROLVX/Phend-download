@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { GithubIcon } from "@/components/ui/GithubIcon";
+import { PhendWatermark } from "@/components/ui/PhendWatermark";
 import { ArrowUp } from "lucide-react";
 
 export function Footer() {
@@ -38,14 +39,7 @@ export function Footer() {
         </p>
       </div>
 
-      <div
-        className="pointer-events-none relative h-20 select-none overflow-hidden sm:h-28 md:h-36"
-        aria-hidden
-      >
-        <p className="font-display pixel-shadow absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-[22vw] leading-none text-white/[0.04] sm:-top-4 sm:text-[16vw] md:-top-6">
-          PHEND
-        </p>
-      </div>
+      <PhendWatermark />
     </footer>
   );
 }
