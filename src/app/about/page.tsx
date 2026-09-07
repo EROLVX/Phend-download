@@ -55,8 +55,8 @@ export default function AboutPage() {
                     zoom={1.5}
                     focusX={0.5}
                     focusY={0.17}
-                    contrast={1.12}
-                    brightness={4}
+                    contrast={1.42}
+                    brightness={-26}
                     sharpen={0.85}
                   />
                 </div>
