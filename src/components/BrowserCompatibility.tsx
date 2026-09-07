@@ -167,7 +167,7 @@ function BrowserTile({
     <motion.button
       type="button"
       aria-expanded={showTip}
-      aria-label={`${name} — Manifest V3 compatible`}
+      aria-label={`${name}, Manifest V3 compatible`}
       onClick={onToggle}
       className="group relative flex flex-col items-center"
       initial="hidden"

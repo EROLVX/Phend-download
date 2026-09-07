@@ -5,7 +5,7 @@ const rows = [
   {
     icon: GitBranch,
     label: "Rule version",
-    detail: "Manually published from the whitelist — bumps when the registry changes.",
+    detail: "Manually published from the whitelist. Bumps when the registry changes.",
     value: "v36",
   },
   {
@@ -17,7 +17,7 @@ const rows = [
   {
     icon: Cpu,
     label: "Model version",
-    detail: "Read-only — published from the admin dashboard, pulled on Sync now.",
+    detail: "Read-only. Published from the admin dashboard, pulled on Sync now.",
     value: "Vexa-1 Beta · v1.0",
   },
 ];

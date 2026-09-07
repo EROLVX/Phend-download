@@ -53,7 +53,7 @@ export function DownloadSection() {
             unpacked extension.
           </p>
           <p className="mt-4 text-[12px] text-white/35 sm:mt-5 sm:text-sm">
-            That&rsquo;s everything. Two minutes to install &mdash; no account, no
+            That&rsquo;s everything. Two minutes to install. No account, no
             sign-up, no tracking.
           </p>
         </Reveal>

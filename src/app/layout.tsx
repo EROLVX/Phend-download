@@ -19,20 +19,20 @@ const silkscreen = Silkscreen({
 });
 
 export const metadata: Metadata = {
-  title: "Phend — Beta Download Portal",
+  title: "Phend | Beta Download Portal",
   description:
-    "Download, install, and update Phend — the AI-powered phishing detection extension that runs entirely on-device.",
+    "Download, install, and update Phend, the AI-powered phishing detection extension that runs entirely on-device.",
   openGraph: {
-    title: "Phend — Beta Download Portal",
+    title: "Phend | Beta Download Portal",
     description:
-      "Download, install, and update Phend — the AI-powered phishing detection extension that runs entirely on-device.",
+      "Download, install, and update Phend, the AI-powered phishing detection extension that runs entirely on-device.",
     images: ["/og-image.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phend — Beta Download Portal",
+    title: "Phend | Beta Download Portal",
     description:
-      "Download, install, and update Phend — the AI-powered phishing detection extension that runs entirely on-device.",
+      "Download, install, and update Phend, the AI-powered phishing detection extension that runs entirely on-device.",
     images: ["/og-image.png"],
   },
 };

@@ -23,6 +23,9 @@ export function Halftone({
   aspect = 0.8,
   contrast = 1.25,
   brightness = 6,
+  focusX = 0.5,
+  focusY = 0.5,
+  zoom = 1,
   className,
 }: {
   src: string;
@@ -33,6 +36,11 @@ export function Halftone({
   aspect?: number;
   contrast?: number;
   brightness?: number;
+  /** Crop anchors, 0..1. 0.5 = centred, which is plain cover-fit. */
+  focusX?: number;
+  focusY?: number;
+  /** >1 crops in tighter than cover-fit, so you can frame a face. */
+  zoom?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -56,10 +64,10 @@ export function Halftone({
       if (!ctx) return;
 
       // cover-fit the source into the low-res buffer
-      const r = Math.max(w / img.width, h / img.height);
+      const r = Math.max(w / img.width, h / img.height) * zoom;
       const dw = img.width * r;
       const dh = img.height * r;
-      ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+      ctx.drawImage(img, (w - dw) * focusX, (h - dh) * focusY, dw, dh);
 
       const frame = ctx.getImageData(0, 0, w, h);
       const p = frame.data;
@@ -82,7 +90,7 @@ export function Halftone({
     return () => {
       cancelled = true;
     };
-  }, [src, cols, aspect, contrast, brightness]);
+  }, [src, cols, aspect, contrast, brightness, focusX, focusY, zoom]);
 
   if (failed) {
     return (

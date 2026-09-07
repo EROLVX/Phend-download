@@ -26,14 +26,14 @@ const features = [
     icon: ShieldAlert,
     title: "Safe, Phishing & Suspicious verdicts",
     description:
-      "Each result comes with a confidence score and the plain-language reasons behind it — domain length, URL length, path length, and more.",
+      "Each result comes with a confidence score and the plain-language reasons behind it: domain length, URL length, path length, and more.",
     ghostSize: 330,
   },
   {
     icon: MonitorSmartphone,
     title: "Toolbar popup",
     description:
-      "A one-click view of the current site's verdict, a protection toggle, and your session stats — scans, threats blocked, sites trusted.",
+      "A one-click view of the current site's verdict, a protection toggle, and your session stats: scans, threats blocked, sites trusted.",
     ghostSize: 315,
   },
   {
@@ -61,7 +61,7 @@ const features = [
     icon: ShieldCheck,
     title: "Trusted domains & blocklist",
     description:
-      "Manage your own Allowlist and Blocklist, search saved domains, and review scan history — all in one place.",
+      "Manage your own Allowlist and Blocklist, search saved domains, and review scan history, all in one place.",
     ghostSize: 315,
   },
   {
@@ -159,7 +159,7 @@ export function HowToUse() {
             What Phend actually does.
           </h2>
           <p className="mt-3 text-[13px] leading-relaxed text-white/55 sm:mt-4 sm:text-base">
-            A short tour of the real extension surface — nothing here is a
+            A short tour of the real extension surface. Nothing here is a
             planned feature, it&apos;s what ships in the beta today.
           </p>
         </Reveal>

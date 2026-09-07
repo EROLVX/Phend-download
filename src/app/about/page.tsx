@@ -7,7 +7,7 @@ import { Halftone } from "@/components/ui/Halftone";
 import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "James Erol Lagonero — Phend",
+  title: "James Erol Lagonero | Phend",
   description:
     "Full-stack developer building web and mobile apps, and the developer behind Phend.",
 };
@@ -49,10 +49,15 @@ export default function AboutPage() {
               <Reveal delay={0.05}>
                 <div className="border border-white/[0.08] bg-white/[0.02] p-1.5">
                   <Halftone
-                    src="/profile.jpg"
+                    src="/profile.jpeg"
                     alt="Portrait of James Erol Lagonero"
                     cols={150}
                     aspect={0.82}
+                    zoom={2}
+                    focusX={0.42}
+                    focusY={0.15}
+                    contrast={1.18}
+                    brightness={-4}
                   />
                 </div>
               </Reveal>
@@ -65,9 +70,9 @@ export default function AboutPage() {
                 <div className="mt-5 max-w-xl space-y-4 text-[13.5px] leading-relaxed text-white/60 sm:mt-6 sm:text-[15px]">
                   <p>
                     I&rsquo;m a full-stack developer. I build web and mobile
-                    apps front to back, and I use AI as part of how I work
-                    &mdash; not to skip the thinking, but to move faster and
-                    reach further than I could on my own.
+                    apps front to back, and I use AI as part of how I work. Not
+                    to skip the thinking, but to move faster and reach further
+                    than I could on my own.
                   </p>
                   <p>
                     I design as much as I develop. Clean, modern interfaces are
@@ -76,10 +81,9 @@ export default function AboutPage() {
                   </p>
                   <p>
                     Most weeks I&rsquo;m shipping something small on the side.
-                    I&rsquo;m drawn to where security and AI meet &mdash; Phend
-                    started there &mdash; and when I&rsquo;m not building,
-                    I&rsquo;m usually deep in a game, a film, or something new
-                    on repeat.
+                    I&rsquo;m drawn to where security and AI meet, which is where
+                    Phend started. When I&rsquo;m not building, I&rsquo;m usually
+                    deep in a game, a film, or something new on repeat.
                   </p>
                 </div>
 
