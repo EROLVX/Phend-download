@@ -128,7 +128,7 @@ export function HowToUse() {
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden border-t border-white/[0.06] py-24 sm:py-32"
+      className="relative overflow-hidden border-t border-white/[0.06] py-24 sm:py-28 lg:py-32"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {watermarkIcons.map((w, i) => {
@@ -154,18 +154,18 @@ export function HowToUse() {
 
       <div className="relative z-10 mx-auto max-w-[1280px] px-6">
         <Reveal className="max-w-xl">
-          <p className="text-sm font-medium text-white/40">How it works</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <p className="font-display text-[10px] tracking-wide text-white/40 sm:text-[11px]">How it works</p>
+          <h2 className="mt-3 text-[22px] font-semibold leading-snug tracking-tight sm:text-3xl lg:text-4xl">
             What Phend actually does.
           </h2>
-          <p className="mt-4 text-white/55">
+          <p className="mt-3 text-[13px] leading-relaxed text-white/55 sm:mt-4 sm:text-base">
             A short tour of the real extension surface — nothing here is a
             planned feature, it&apos;s what ships in the beta today.
           </p>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="mt-14 flex flex-col gap-2 lg:h-[400px] lg:flex-row lg:gap-3">
+          <div className="mt-10 flex flex-col gap-2.5 sm:mt-12 lg:mt-14 lg:h-[400px] lg:flex-row lg:gap-3">
             {features.map((feature, i) => {
               const isActive = i === active;
               return (
@@ -177,7 +177,7 @@ export function HowToUse() {
                   onFocus={() => setActive(i)}
                   aria-expanded={isActive}
                   className={cn(
-                    "group relative flex flex-col overflow-hidden border p-5 text-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:min-w-0",
+                    "group relative flex flex-col overflow-hidden border p-3.5 text-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:p-5 lg:min-w-0",
                     isActive
                       ? "border-info/45 bg-info/[0.07] shadow-[inset_0_1px_0_0_rgba(59,130,246,0.28)] lg:flex-[6] lg:justify-end lg:p-9"
                       : "border-white/[0.07] bg-card hover:border-white/[0.18] hover:bg-card-hover lg:flex-[0.35] lg:px-4"
@@ -199,7 +199,7 @@ export function HowToUse() {
 
                   <div
                     className={cn(
-                      "relative flex items-center gap-3 lg:flex-col lg:gap-5",
+                      "relative flex items-center gap-2.5 sm:gap-3 lg:flex-col lg:gap-5",
                       isActive
                         ? "animate-panel-in lg:items-start"
                         : "lg:items-center"
@@ -211,16 +211,16 @@ export function HowToUse() {
                       className={cn(
                         "shrink-0 transition-colors duration-300",
                         isActive
-                          ? "text-info"
-                          : "text-white/40 group-hover:text-white/70"
+                          ? "h-[21px] w-[21px] text-info sm:h-[26px] sm:w-[26px]"
+                          : "h-4 w-4 text-white/40 group-hover:text-white/70 sm:h-[18px] sm:w-[18px]"
                       )}
                     />
                     <p
                       className={cn(
                         "font-medium transition-colors duration-300",
                         isActive
-                          ? "text-[17px] text-white lg:text-[27px] lg:leading-tight lg:tracking-tight"
-                          : "text-[15px] text-white/70",
+                          ? "text-[14.5px] text-white sm:text-[17px] lg:text-[27px] lg:leading-tight lg:tracking-tight"
+                          : "text-[13px] text-white/70 sm:text-[15px]",
                         // Collapsed panels are narrow strips on desktop, so the
                         // label runs bottom-to-top down the strip instead.
                         !isActive &&
@@ -232,7 +232,7 @@ export function HowToUse() {
                   </div>
 
                   {isActive && (
-                    <p className="animate-panel-in-late relative mt-3 max-w-xl text-[14px] leading-relaxed text-white/65 lg:mt-5 lg:text-[17px] lg:leading-[1.75]">
+                    <p className="animate-panel-in-late relative mt-2 max-w-xl text-[12.5px] leading-relaxed text-white/65 sm:mt-3 sm:text-[14px] lg:mt-5 lg:text-[17px] lg:leading-[1.75]">
                       {feature.description}
                     </p>
                   )}

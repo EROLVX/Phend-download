@@ -37,25 +37,25 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative border-t border-white/[0.06] py-24 sm:py-32">
+    <section id="faq" className="relative border-t border-white/[0.06] py-24 sm:py-28 lg:py-32">
       <div className="mx-auto max-w-[820px] px-6">
         <Reveal className="text-center">
-          <p className="text-sm font-medium text-white/40">FAQ</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <p className="font-display text-[10px] tracking-wide text-white/40 sm:text-[11px]">FAQ</p>
+          <h2 className="mt-3 text-[22px] font-semibold leading-snug tracking-tight sm:text-3xl lg:text-4xl">
             Common questions.
           </h2>
         </Reveal>
 
-        <div className="mt-12 divide-y divide-white/[0.06] rounded-2xl border border-white/[0.08] bg-card">
+        <div className="mt-10 divide-y divide-white/[0.06] rounded-2xl border border-white/[0.08] bg-card sm:mt-12">
           {faqs.map((faq, i) => {
             const isOpen = open === i;
             return (
-              <div key={faq.q} className="px-6">
+              <div key={faq.q} className="px-4 sm:px-6">
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 py-5 text-left"
+                  className="flex w-full items-center justify-between gap-3 py-3.5 text-left sm:gap-4 sm:py-5"
                 >
-                  <span className="text-[15px] font-medium text-white">{faq.q}</span>
+                  <span className="text-[13.5px] font-medium leading-snug text-white sm:text-[15px]">{faq.q}</span>
                   <Plus
                     size={16}
                     className={cn(
@@ -73,7 +73,7 @@ export function Faq() {
                       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-5 text-[13.5px] leading-relaxed text-white/50">
+                      <p className="pb-4 text-[12px] leading-relaxed text-white/50 sm:pb-5 sm:text-[13.5px]">
                         {faq.a}
                       </p>
                     </motion.div>

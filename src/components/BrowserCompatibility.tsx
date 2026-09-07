@@ -13,17 +13,19 @@ import {
 import { Reveal } from "@/components/ui/Reveal";
 
 const sizeClasses = {
-  sm: "h-14 w-14 sm:h-20 sm:w-20 sm:rounded-2xl lg:h-16 lg:w-16",
-  md: "h-14 w-14 sm:h-20 sm:w-20 sm:rounded-2xl lg:h-20 lg:w-20",
-  lg: "h-14 w-14 sm:h-20 sm:w-20 sm:rounded-2xl lg:h-24 lg:w-24",
+  sm: "h-11 w-11 rounded-lg sm:h-14 sm:w-14 sm:rounded-xl lg:h-16 lg:w-16 lg:rounded-2xl",
+  md: "h-12 w-12 rounded-lg sm:h-16 sm:w-16 sm:rounded-xl lg:h-20 lg:w-20 lg:rounded-2xl",
+  lg: "h-[52px] w-[52px] rounded-lg sm:h-[72px] sm:w-[72px] sm:rounded-xl lg:h-24 lg:w-24 lg:rounded-2xl",
 } as const;
 
 const iconSizeClasses = {
-  sm: "h-7 w-7 sm:h-10 sm:w-10 lg:h-8 lg:w-8",
-  md: "h-7 w-7 sm:h-10 sm:w-10 lg:h-10 lg:w-10",
+  sm: "h-6 w-6 sm:h-8 sm:w-8 lg:h-8 lg:w-8",
+  md: "h-6 w-6 sm:h-9 sm:w-9 lg:h-10 lg:w-10",
   lg: "h-7 w-7 sm:h-10 sm:w-10 lg:h-12 lg:w-12",
 } as const;
 
+// Two position sets. On phones the copy fills the full width, so the tiles
+// cluster above and below it instead of sitting in the side margins.
 const browsers = [
   {
     name: "Google Chrome",
@@ -31,6 +33,7 @@ const browsers = [
     zoom: 1,
     scatter: { x: -36, y: -46, rotate: -10 },
     desktop: { top: 6, left: 11, size: "lg" as const },
+    mobile: { top: 19, left: 20 },
   },
   {
     name: "Microsoft Edge",
@@ -38,6 +41,7 @@ const browsers = [
     zoom: 1,
     scatter: { x: 28, y: -54, rotate: 9 },
     desktop: { top: 4, left: 79, size: "md" as const },
+    mobile: { top: 19, left: 80 },
   },
   {
     name: "Brave",
@@ -45,6 +49,7 @@ const browsers = [
     zoom: 1,
     scatter: { x: -22, y: -32, rotate: 7 },
     desktop: { top: 47, left: 4, size: "sm" as const },
+    mobile: { top: 7, left: 50 },
   },
   {
     name: "Opera",
@@ -52,6 +57,7 @@ const browsers = [
     zoom: 1,
     scatter: { x: 20, y: -38, rotate: -8 },
     desktop: { top: 51, left: 93, size: "sm" as const },
+    mobile: { top: 91, left: 50 },
   },
   {
     name: "Vivaldi",
@@ -59,6 +65,7 @@ const browsers = [
     zoom: 1,
     scatter: { x: 38, y: -26, rotate: 11 },
     desktop: { top: 88, left: 19, size: "md" as const },
+    mobile: { top: 80, left: 22 },
   },
   {
     name: "Arc",
@@ -66,6 +73,7 @@ const browsers = [
     zoom: 1.3,
     scatter: { x: -40, y: -30, rotate: -12 },
     desktop: { top: 90, left: 75, size: "lg" as const },
+    mobile: { top: 80, left: 78 },
   },
 ];
 
@@ -78,6 +86,20 @@ const watermarkIcons = [
   { logo: "/icons/browsers/arc.png", top: 92, left: 64, size: 340 },
 ];
 
+const MOBILE_QUERY = "(max-width: 1023px)";
+
+function useIsMobile() {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mql = window.matchMedia(MOBILE_QUERY);
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => false
+  );
+}
+
 function BrowserTile({
   name,
   logo,
@@ -86,6 +108,8 @@ function BrowserTile({
   index,
   size = "md",
   reduceMotion,
+  isOpen,
+  onToggle,
 }: {
   name: string;
   logo: string;
@@ -94,8 +118,12 @@ function BrowserTile({
   index: number;
   size?: "sm" | "md" | "lg";
   reduceMotion: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
+  // Touch devices never fire hover, so a tap opens the same tooltip.
+  const showTip = hovered || isOpen;
 
   const variants: Variants = reduceMotion
     ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
@@ -136,7 +164,11 @@ function BrowserTile({
   const hoverTransition = { type: "spring" as const, stiffness: 300, damping: 20 };
 
   return (
-    <motion.div
+    <motion.button
+      type="button"
+      aria-expanded={showTip}
+      aria-label={`${name} — Manifest V3 compatible`}
+      onClick={onToggle}
       className="group relative flex flex-col items-center"
       initial="hidden"
       whileInView="show"
@@ -146,7 +178,7 @@ function BrowserTile({
       onHoverEnd={() => setHovered(false)}
     >
       <motion.div
-        className={`relative flex items-center justify-center rounded-xl border border-white/[0.08] bg-card ${sizeClasses[size]}`}
+        className={`relative flex items-center justify-center border border-white/[0.08] bg-card ${sizeClasses[size]}`}
         animate={reduceMotion ? undefined : hovered ? hoverAnimate : idleAnimate}
         transition={reduceMotion ? undefined : hovered ? hoverTransition : idleTransition}
       >
@@ -167,17 +199,19 @@ function BrowserTile({
         </span>
 
         <motion.div
-          className="pointer-events-none absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.08] bg-card-hover px-3 py-1 text-[11px] font-medium text-white/70"
-          initial={{ opacity: 0, y: -4 }}
-          animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: -4 }}
+          className="pointer-events-none absolute -top-7 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.08] bg-card-hover px-2 py-0.5 text-[9px] font-medium text-white/70 sm:-top-9 sm:px-3 sm:py-1 sm:text-[11px]"
+          initial={{ opacity: 0, y: 4 }}
+          animate={showTip ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
           transition={{ duration: 0.15 }}
         >
           Manifest V3 Compatible
         </motion.div>
       </motion.div>
 
-      <p className="mt-2 text-[11px] font-medium text-white/45 sm:mt-3 sm:text-xs">{name}</p>
-    </motion.div>
+      <span className="mt-1.5 block whitespace-nowrap text-[9.5px] font-medium text-white/45 sm:mt-2.5 sm:text-[11px] lg:mt-3 lg:text-xs">
+        {name}
+      </span>
+    </motion.button>
   );
 }
 
@@ -186,21 +220,37 @@ function ScatteredTile({
   index,
   reduceMotion,
   spread,
+  isMobile,
+  isOpen,
+  onToggle,
 }: {
   browser: (typeof browsers)[number];
   index: number;
   reduceMotion: boolean;
   spread: MotionValue<number>;
+  isMobile: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
-  const dirX = browser.desktop.left - 50;
-  const dirY = browser.desktop.top - 50;
-  const driftX = useTransform(spread, (s) => (reduceMotion ? 0 : dirX * 11 * (s - 1)));
-  const driftY = useTransform(spread, (s) => (reduceMotion ? 0 : dirY * 4.2 * (s - 1)));
+  const pos = isMobile ? browser.mobile : browser.desktop;
+  const dirX = pos.left - 50;
+  const dirY = pos.top - 50;
+  // Phones have far less room, so the desktop drift would fling tiles offscreen.
+  const fx = isMobile ? 4.2 : 11;
+  const fy = isMobile ? 2.4 : 4.2;
+  const driftX = useTransform(spread, (s) => (reduceMotion ? 0 : dirX * fx * (s - 1)));
+  const driftY = useTransform(spread, (s) => (reduceMotion ? 0 : dirY * fy * (s - 1)));
 
   return (
     <div
-      className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
-      style={{ top: `${browser.desktop.top}%`, left: `${browser.desktop.left}%` }}
+      // Tiles are sibling layers, so a neighbour would paint over this one's
+      // tooltip. Raise whichever tile is open (tap) or hovered (mouse).
+      className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 [&:has(:hover)]:z-30"
+      style={{
+        top: `${pos.top}%`,
+        left: `${pos.left}%`,
+        zIndex: isOpen ? 30 : undefined,
+      }}
     >
       <motion.div className="pointer-events-auto" style={{ x: driftX, y: driftY }}>
         <BrowserTile
@@ -211,6 +261,8 @@ function ScatteredTile({
           index={index}
           size={browser.desktop.size}
           reduceMotion={reduceMotion}
+          isOpen={isOpen}
+          onToggle={onToggle}
         />
       </motion.div>
     </div>
@@ -225,6 +277,8 @@ export function BrowserCompatibility() {
     () => false
   );
   const reduceMotion = isClient && !!prefersReduced;
+  const isMobile = useIsMobile();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -233,7 +287,10 @@ export function BrowserCompatibility() {
   const spread = useTransform(scrollYProgress, [0, 1], [1, 0.18]);
 
   return (
-    <section id="browsers" className="relative overflow-hidden border-t border-white/[0.06] py-12 sm:py-16 lg:py-20">
+    <section
+      id="browsers"
+      className="relative overflow-hidden border-t border-white/[0.06] py-20 sm:py-24 lg:py-28"
+    >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {watermarkIcons.map((icon) => (
           <div
@@ -242,8 +299,12 @@ export function BrowserCompatibility() {
             style={{
               top: `${icon.top}%`,
               left: `${icon.left}%`,
-              width: icon.size,
-              height: icon.size,
+              // Scales with the viewport so the watermark never swamps a phone.
+              width: `clamp(${Math.round(icon.size * 0.34)}px, ${(
+                (icon.size / 1440) *
+                100
+              ).toFixed(1)}vw, ${icon.size}px)`,
+              aspectRatio: "1 / 1",
             }}
           >
             <Image src={icon.logo} alt="" fill sizes="360px" className="object-contain" />
@@ -254,35 +315,23 @@ export function BrowserCompatibility() {
 
       <div
         ref={sectionRef}
-        className="relative z-10 mx-auto max-w-[1280px] px-6 lg:flex lg:min-h-[440px] lg:items-center lg:justify-center"
+        className="relative z-10 mx-auto flex min-h-[540px] max-w-[1280px] items-center justify-center px-6 sm:min-h-[600px] lg:min-h-[440px]"
       >
         <Reveal className="relative z-10 mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-white/40">Compatibility</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+          <p className="font-display text-[10px] tracking-wide text-white/40 sm:text-[11px]">
+            Compatibility
+          </p>
+          <h2 className="mt-3 text-[21px] font-semibold leading-snug tracking-tight sm:text-3xl lg:text-4xl">
             Runs on every Chromium browser you already use.
           </h2>
-          <p className="mt-3 text-[14px] text-white/55 sm:mt-4 sm:text-base">
+          <p className="mt-3 text-[13px] leading-relaxed text-white/55 sm:mt-4 sm:text-base">
             Phend ships as a Manifest V3 extension, so it installs the same
             way and behaves identically across every browser built on
             Chromium.
           </p>
         </Reveal>
 
-        <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 place-items-center gap-y-6 sm:mt-10 sm:gap-y-10 sm:grid-cols-6 sm:gap-x-4 lg:hidden">
-          {browsers.map((browser, index) => (
-            <BrowserTile
-              key={browser.name}
-              name={browser.name}
-              logo={browser.logo}
-              zoom={browser.zoom}
-              scatter={browser.scatter}
-              index={index}
-              reduceMotion={reduceMotion}
-            />
-          ))}
-        </div>
-
-        <div className="absolute inset-0 hidden lg:block">
+        <div className="absolute inset-0">
           {browsers.map((browser, index) => (
             <ScatteredTile
               key={browser.name}
@@ -290,6 +339,11 @@ export function BrowserCompatibility() {
               index={index}
               reduceMotion={reduceMotion}
               spread={spread}
+              isMobile={isMobile}
+              isOpen={openIndex === index}
+              onToggle={() =>
+                setOpenIndex((cur) => (cur === index ? null : index))
+              }
             />
           ))}
         </div>

@@ -9,27 +9,26 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-black pt-28 pb-16 sm:pt-40 sm:pb-24 lg:pt-48 lg:pb-32"
+      className="relative overflow-hidden bg-black pt-28 pb-20 sm:pt-40 sm:pb-28 lg:pt-48 lg:pb-32"
     >
       <HeroGrid />
 
-      {/* Soft flashlight spilling in from the top-left corner */}
-      <div
-        className="pointer-events-none absolute left-0 top-0 z-0 h-[560px] w-full max-w-[900px]"
-        aria-hidden
-      >
+      {/* Corner light: brightest at the very top-left edge and decaying
+          diagonally. Anchoring the gradient at 0% 0% is what stops it from
+          reading as a floating circle. */}
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
         <div
-          className="absolute left-[-160px] top-0 h-[480px] w-[900px] blur-[80px]"
+          className="absolute left-0 top-0 h-[620px] w-[860px] max-w-full"
           style={{
             background:
-              "radial-gradient(ellipse 55% 100% at 40% 0%, rgba(255,255,255,0.10), rgba(255,255,255,0.03) 45%, transparent 72%)",
+              "radial-gradient(115% 95% at 0% 0%, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.055) 26%, rgba(255,255,255,0.018) 50%, transparent 76%)",
           }}
         />
         <div
-          className="absolute left-[-80px] top-0 h-[320px] w-[520px] blur-[55px]"
+          className="absolute left-0 top-0 h-[320px] w-[460px] max-w-full"
           style={{
             background:
-              "radial-gradient(ellipse 50% 100% at 42% 0%, rgba(255,255,255,0.12), transparent 70%)",
+              "radial-gradient(100% 90% at 0% 0%, rgba(255,255,255,0.11), transparent 70%)",
           }}
         />
       </div>
@@ -43,7 +42,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <h1 className="font-display text-balance text-[clamp(1.6rem,7vw,3.4rem)] leading-[1.15] text-white pixel-shadow">
+            <h1 className="font-display text-balance text-[clamp(1.3rem,5.8vw,3.4rem)] leading-[1.15] text-white pixel-shadow">
               Protect yourself
               <br />
               from phishing.
@@ -51,22 +50,22 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/60 sm:mt-6 sm:text-[17px]">
+            <p className="mt-3.5 max-w-md text-[13px] leading-relaxed text-white/60 sm:mt-6 sm:text-[17px]">
               Runs entirely on your device. No account required. Phend scans
               every site you visit and blocks phishing before it loads.
             </p>
           </Reveal>
 
           <Reveal delay={0.15}>
-            <div className="mt-7 flex flex-wrap items-center gap-3 sm:mt-9">
+            <div className="mt-6 flex flex-wrap items-center gap-2 sm:mt-9 sm:gap-3">
               <Button href="#download" size="lg">
-                <span className="relative h-[18px] w-[18px] shrink-0">
+                <span className="relative h-4 w-4 shrink-0 sm:h-[18px] sm:w-[18px]">
                   <Image src="/icons/browsers/chrome.png" alt="" fill sizes="18px" className="object-contain" />
                 </span>
                 Download for Chrome
               </Button>
               <Button href="#download" variant="secondary" size="lg">
-                <span className="relative h-[18px] w-[18px] shrink-0">
+                <span className="relative h-4 w-4 shrink-0 sm:h-[18px] sm:w-[18px]">
                   <Image src="/icons/browsers/edge.png" alt="" fill sizes="18px" className="object-contain" />
                 </span>
                 Download for Edge

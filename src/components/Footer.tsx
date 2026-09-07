@@ -5,7 +5,7 @@ import { ArrowUp } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.06] pt-10">
+    <footer className="relative overflow-hidden border-t border-white/[0.06] pt-12 sm:pt-14">
       <div className="relative z-10 mx-auto flex max-w-[1280px] flex-col items-center justify-between gap-6 px-6 pb-10 sm:flex-row">
         <div className="flex items-center gap-2.5 text-white/50">
           <Image src="/icons/pshld-logo.png" alt="Phend" width={38} height={38} className="h-10 w-10" />

@@ -12,7 +12,7 @@ const IGNITE_FADE =
 
 // Only the stroke within this radius of the cursor lights up.
 const IGNITE_MASK =
-  "radial-gradient(200px circle at var(--mx) var(--my), black 0%, rgba(0,0,0,0.5) 45%, transparent 72%)";
+  "radial-gradient(120px circle at var(--mx) var(--my), black 0%, rgba(0,0,0,0.45) 42%, transparent 70%)";
 
 const LETTERS =
   "font-display absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-[22vw] leading-none sm:-top-4 sm:text-[16vw] md:-top-6";
@@ -53,15 +53,23 @@ export function PhendWatermark() {
           The bottom fade lives on the wrapper so the two masks nest instead of
           needing mask-composite. */}
       <div
-        className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
+        className="absolute inset-0 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100"
         style={{ maskImage: IGNITE_FADE, WebkitMaskImage: IGNITE_FADE }}
       >
-        <p
-          className={`${LETTERS} text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.95)] drop-shadow-[0_0_14px_rgba(255,255,255,0.45)] md:[-webkit-text-stroke:2.5px_rgba(255,255,255,0.95)]`}
+        {/* The cursor mask must live on a box that shares the container's
+            origin. Putting it on the <p> below resolved --mx/--my against the
+            <p>'s own offset box, which made the light land away from the
+            cursor. */}
+        <div
+          className="absolute inset-0"
           style={{ maskImage: IGNITE_MASK, WebkitMaskImage: IGNITE_MASK }}
         >
-          PHEND
-        </p>
+          <p
+            className={`${LETTERS} text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.95)] drop-shadow-[0_0_10px_rgba(255,255,255,0.4)] md:[-webkit-text-stroke:2.5px_rgba(255,255,255,0.95)]`}
+          >
+            PHEND
+          </p>
+        </div>
       </div>
     </div>
   );

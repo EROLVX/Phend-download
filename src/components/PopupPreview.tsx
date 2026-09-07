@@ -94,7 +94,11 @@ export function PopupPreview() {
   const pulse = CLICK_PULSE_PHASES.includes(phase);
 
   return (
-    <div className="relative w-full max-w-[360px]">
+    // The card is designed at 360x440. Shrinking the box reflowed its
+    // contents and clipped the warning screen, so scale the whole thing
+    // instead and let the outer box reserve the scaled footprint.
+    <div className="relative h-[352px] w-[288px] sm:h-[396px] sm:w-[324px] lg:h-[440px] lg:w-[360px]">
+      <div className="absolute left-0 top-0 h-[440px] w-[360px] origin-top-left scale-[0.8] sm:scale-90 lg:scale-100">
       <div className="animate-float-slow relative h-[440px] overflow-hidden rounded-2xl bg-[#0a0a0a]/95 shadow-[0_40px_90px_-24px_rgba(0,0,0,0.95),0_16px_40px_-16px_rgba(0,0,0,0.8)] backdrop-blur">
         <AnimatePresence>
           {showToolbar && (
@@ -373,6 +377,7 @@ export function PopupPreview() {
           className="animate-glass-breathe pointer-events-none absolute inset-x-0 top-0 z-30 h-px bg-[linear-gradient(to_right,transparent,rgba(255,255,255,0.55)_50%,transparent)]"
           aria-hidden
         />
+      </div>
       </div>
     </div>
   );

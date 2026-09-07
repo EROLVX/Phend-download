@@ -7,11 +7,11 @@ export function GridBackground() {
         aria-hidden
       />
       <div
-        className="glow-orb absolute right-[-10%] top-[30%] h-[420px] w-[420px] bg-success/[0.05]"
+        className="glow-orb absolute right-[-10%] top-[30%] h-[420px] w-[420px] bg-white/[0.035]"
         aria-hidden
       />
       <div
-        className="glow-orb absolute left-[-8%] bottom-[5%] h-[380px] w-[380px] bg-accent/[0.05]"
+        className="glow-orb absolute left-[-8%] bottom-[5%] h-[380px] w-[380px] bg-white/[0.03]"
         aria-hidden
       />
       <div className="absolute inset-0 bg-noise mix-blend-overlay" />

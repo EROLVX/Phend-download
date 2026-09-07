@@ -2,19 +2,23 @@ import Image from "next/image";
 import { Reveal } from "@/components/ui/Reveal";
 import { Badge } from "@/components/ui/Badge";
 import { Download } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const meta = [
+// `pixel` renders the value in the Silkscreen display face. Swap the
+// Downloads value for the live count once the Supabase table exists.
+const meta: { label: string; value: string; pixel?: boolean }[] = [
   { label: "Latest version", value: "1.0.0" },
   { label: "Platform", value: "Chrome / Edge" },
   { label: "File size", value: "—" },
   { label: "Last updated", value: "—" },
+  { label: "Downloads", value: "0", pixel: true },
 ];
 
 export function DownloadSection() {
   return (
     <section
       id="download"
-      className="relative overflow-hidden border-t border-white/[0.06] py-24 sm:py-32"
+      className="relative overflow-hidden border-t border-white/[0.06] py-24 sm:py-28 lg:py-32"
     >
       {/* Flashlight: a soft white beam falling from the top edge of the section */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[560px]" aria-hidden>
@@ -40,27 +44,27 @@ export function DownloadSection() {
 
       <div className="relative mx-auto max-w-[1280px] px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium text-white/40">Get Phend</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <p className="font-display text-[10px] tracking-wide text-white/40 sm:text-[11px]">Get Phend</p>
+          <h2 className="mt-3 text-[22px] font-semibold leading-snug tracking-tight sm:text-3xl lg:text-4xl">
             Download Phend
           </h2>
-          <p className="mt-4 text-white/55">
+          <p className="mt-3 text-[13px] leading-relaxed text-white/55 sm:mt-4 sm:text-base">
             Same build works for both browsers. Unzip it, then load it as an
             unpacked extension.
           </p>
-          <p className="mt-5 text-sm text-white/35">
+          <p className="mt-4 text-[12px] text-white/35 sm:mt-5 sm:text-sm">
             That&rsquo;s everything. Two minutes to install &mdash; no account, no
             sign-up, no tracking.
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="relative mx-auto mt-12 max-w-3xl">
+        <Reveal delay={0.1} className="relative mx-auto mt-10 max-w-3xl sm:mt-12">
           <div
             className="absolute -inset-8 -z-10 rounded-[40px] bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.08),transparent_70%)] blur-2xl"
             aria-hidden
           />
           <div
-            className="relative overflow-hidden rounded-2xl p-8 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.85)] backdrop-blur-2xl backdrop-saturate-150 sm:p-10"
+            className="relative overflow-hidden rounded-2xl p-4 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.85)] backdrop-blur-2xl backdrop-saturate-150 sm:p-8 lg:p-10"
             style={{
               background:
                 "linear-gradient(to bottom, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.035) 38%, rgba(255,255,255,0.012) 100%)",
@@ -114,18 +118,18 @@ export function DownloadSection() {
               <span className="text-xs text-white/35">dist.zip · unpacked extension</span>
             </div>
 
-            <div className="relative mt-8 grid gap-3 sm:grid-cols-2">
+            <div className="relative mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-3">
               <a
                 href="/downloads/phend.zip"
                 download
-                className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
+                className="group relative flex items-center gap-3 sm:gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] sm:p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
               >
-                <span className="relative h-9 w-9 shrink-0">
+                <span className="relative h-7 w-7 shrink-0 sm:h-9 sm:w-9">
                   <Image src="/icons/browsers/chrome.png" alt="" fill sizes="36px" className="object-contain" />
                 </span>
                 <div className="flex-1 text-left">
-                  <p className="text-[15px] font-medium text-white">Google Chrome</p>
-                  <p className="text-xs text-white/40">Download ZIP</p>
+                  <p className="text-[13.5px] font-medium text-white sm:text-[15px]">Google Chrome</p>
+                  <p className="text-[11px] text-white/40 sm:text-xs">Download ZIP</p>
                 </div>
                 <Download
                   size={16}
@@ -136,14 +140,14 @@ export function DownloadSection() {
               <a
                 href="/downloads/phend.zip"
                 download
-                className="group relative flex items-center gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
+                className="group relative flex items-center gap-3 sm:gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] sm:p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
               >
-                <span className="relative h-9 w-9 shrink-0">
+                <span className="relative h-7 w-7 shrink-0 sm:h-9 sm:w-9">
                   <Image src="/icons/browsers/edge.png" alt="" fill sizes="36px" className="object-contain" />
                 </span>
                 <div className="flex-1 text-left">
-                  <p className="text-[15px] font-medium text-white">Microsoft Edge</p>
-                  <p className="text-xs text-white/40">Download ZIP</p>
+                  <p className="text-[13.5px] font-medium text-white sm:text-[15px]">Microsoft Edge</p>
+                  <p className="text-[11px] text-white/40 sm:text-xs">Download ZIP</p>
                 </div>
                 <Download
                   size={16}
@@ -152,13 +156,23 @@ export function DownloadSection() {
               </a>
             </div>
 
-            <div className="relative mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.05] sm:grid-cols-4">
+            <div className="relative mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.05] sm:mt-8 lg:grid-cols-5">
               {meta.map((item) => (
-                <div key={item.label} className="bg-[linear-gradient(to_bottom,rgba(255,255,255,0.04),rgba(255,255,255,0.012))] px-4 py-4 backdrop-blur-md">
-                  <p className="text-[11px] uppercase tracking-wide text-white/35">
+                <div
+                  key={item.label}
+                  className="bg-[linear-gradient(to_bottom,rgba(255,255,255,0.04),rgba(255,255,255,0.012))] px-3 py-3 backdrop-blur-md last:col-span-2 sm:px-4 sm:py-4 lg:last:col-span-1"
+                >
+                  <p className="text-[9.5px] uppercase tracking-wide text-white/35 sm:text-[11px]">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-sm font-medium text-white">{item.value}</p>
+                  <p
+                    className={cn(
+                      "mt-1 text-[12.5px] font-medium text-white sm:text-sm",
+                      item.pixel && "font-display text-[15px] tracking-wide"
+                    )}
+                  >
+                    {item.value}
+                  </p>
                 </div>
               ))}
             </div>
