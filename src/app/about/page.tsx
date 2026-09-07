@@ -51,14 +51,13 @@ export default function AboutPage() {
                   <Halftone
                     src="/profile.jpeg"
                     alt="Portrait of James Erol Lagonero"
-                    cols={165}
-                    aspect={0.82}
+                    cell={10}
                     zoom={1.5}
                     focusX={0.5}
                     focusY={0.17}
-                    contrast={1.25}
-                    sharpen={1.7}
-                    brightness={-8}
+                    contrast={1.12}
+                    brightness={4}
+                    sharpen={0.85}
                   />
                 </div>
               </Reveal>

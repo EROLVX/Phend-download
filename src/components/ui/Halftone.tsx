@@ -2,49 +2,43 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// 8x8 Bayer matrix. Ordered dithering (rather than error diffusion) is what
-// produces the regular dot lattice the reference image has — Floyd–Steinberg
-// would scatter the dots and lose that print-halftone look.
-const BAYER8 = [
-  [0, 32, 8, 40, 2, 34, 10, 42],
-  [48, 16, 56, 24, 50, 18, 58, 26],
-  [12, 44, 4, 36, 14, 46, 6, 38],
-  [60, 28, 52, 20, 62, 30, 54, 22],
-  [3, 35, 11, 43, 1, 33, 9, 41],
-  [51, 19, 59, 27, 49, 17, 57, 25],
-  [15, 47, 7, 39, 13, 45, 5, 37],
-  [63, 31, 55, 23, 61, 29, 53, 21],
-];
-
+/**
+ * A true halftone screen: a grid of dots whose *radius* tracks local
+ * brightness, the way printed halftones work.
+ *
+ * The earlier version used 1-bit Bayer dithering, where every dot is the same
+ * size and tone is faked by scattering them. That reads as speckle on a face.
+ * Varying the dot size instead renders smooth tone and stays legible.
+ */
 export function Halftone({
   src,
   alt,
-  cols = 150,
+  /** Dot spacing in canvas pixels. Larger = chunkier screen. */
+  cell = 5,
+  /** width / height of the frame. */
   aspect = 0.8,
-  contrast = 1.25,
-  brightness = 6,
+  contrast = 1.15,
+  brightness = 0,
   focusX = 0.5,
   focusY = 0.5,
   zoom = 1,
-  sharpen = 0.9,
+  /** Unsharp-mask strength applied before the screen. */
+  sharpen = 0.7,
+  /** Dot radius multiplier. Above ~0.71 the darkest dots start to touch. */
+  dotScale = 0.78,
   className,
 }: {
   src: string;
   alt: string;
-  /** Dot columns across. Lower = chunkier dots. */
-  cols?: number;
-  /** width / height ratio of the frame. */
+  cell?: number;
   aspect?: number;
   contrast?: number;
   brightness?: number;
-  /** Crop anchors, 0..1. 0.5 = centred, which is plain cover-fit. */
   focusX?: number;
   focusY?: number;
-  /** >1 crops in tighter than cover-fit, so you can frame a face. */
   zoom?: number;
-  /** Unsharp-mask strength. 1-bit dithering destroys soft edges, so edges
-   *  have to be crisped up before thresholding or the face reads as mush. */
   sharpen?: number;
+  dotScale?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -60,62 +54,76 @@ export function Halftone({
     img.onerror = () => !cancelled && setFailed(true);
     img.onload = () => {
       if (cancelled) return;
-      const w = cols;
-      const h = Math.round(cols / aspect);
-      canvas.width = w;
-      canvas.height = h;
+
+      const W = 720;
+      const H = Math.round(W / aspect);
+      canvas.width = W;
+      canvas.height = H;
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
       if (!ctx) return;
 
-      // cover-fit the source into the low-res buffer
-      const r = Math.max(w / img.width, h / img.height) * zoom;
+      // One source pixel per dot. Letting drawImage do the downscale gives a
+      // box average per cell for free.
+      const gw = Math.ceil(W / cell);
+      const gh = Math.ceil(H / cell);
+
+      const tmp = document.createElement("canvas");
+      tmp.width = gw;
+      tmp.height = gh;
+      const tctx = tmp.getContext("2d", { willReadFrequently: true });
+      if (!tctx) return;
+
+      const r = Math.max(gw / img.width, gh / img.height) * zoom;
       const dw = img.width * r;
       const dh = img.height * r;
-      ctx.drawImage(img, (w - dw) * focusX, (h - dh) * focusY, dw, dh);
+      tctx.drawImage(img, (gw - dw) * focusX, (gh - dh) * focusY, dw, dh);
 
-      const frame = ctx.getImageData(0, 0, w, h);
-      const p = frame.data;
+      const px = tctx.getImageData(0, 0, gw, gh).data;
 
-      // 1. luminance
-      const lum = new Float32Array(w * h);
+      const lum = new Float32Array(gw * gh);
       for (let i = 0, j = 0; j < lum.length; i += 4, j++) {
-        lum[j] = 0.299 * p[i] + 0.587 * p[i + 1] + 0.114 * p[i + 2];
+        lum[j] = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
       }
 
-      // 2. unsharp mask against a 3x3 box blur
-      const blur = new Float32Array(w * h);
-      for (let y = 0; y < h; y++) {
-        for (let x = 0; x < w; x++) {
+      // unsharp mask against a 3x3 box blur, so edges survive the screen
+      const blur = new Float32Array(gw * gh);
+      for (let y = 0; y < gh; y++) {
+        for (let x = 0; x < gw; x++) {
           let sum = 0;
           let n = 0;
           for (let dy = -1; dy <= 1; dy++) {
             const yy = y + dy;
-            if (yy < 0 || yy >= h) continue;
+            if (yy < 0 || yy >= gh) continue;
             for (let dx = -1; dx <= 1; dx++) {
               const xx = x + dx;
-              if (xx < 0 || xx >= w) continue;
-              sum += lum[yy * w + xx];
+              if (xx < 0 || xx >= gw) continue;
+              sum += lum[yy * gw + xx];
               n++;
             }
           }
-          blur[y * w + x] = sum / n;
+          blur[y * gw + x] = sum / n;
         }
       }
 
-      // 3. sharpen, then levels, then dither
-      for (let y = 0; y < h; y++) {
-        for (let x = 0; x < w; x++) {
-          const j = y * w + x;
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#fff";
+
+      const rMax = cell * dotScale;
+      for (let y = 0; y < gh; y++) {
+        for (let x = 0; x < gw; x++) {
+          const j = y * gw + x;
           const sharp = lum[j] + sharpen * (lum[j] - blur[j]);
           const adj = (sharp - 128) * contrast + 128 + brightness;
-          const threshold = ((BAYER8[y & 7][x & 7] + 0.5) / 64) * 255;
-          const v = adj > threshold ? 255 : 0;
-          const i = j * 4;
-          p[i] = p[i + 1] = p[i + 2] = v;
-          p[i + 3] = 255;
+          const t = Math.min(1, Math.max(0, adj / 255));
+          if (t <= 0.012) continue;
+          // sqrt so dot *area* tracks brightness, which is what the eye reads
+          const radius = Math.sqrt(t) * rMax;
+          ctx.beginPath();
+          ctx.arc(x * cell + cell / 2, y * cell + cell / 2, radius, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
-      ctx.putImageData(frame, 0, 0);
       setFailed(false);
     };
     img.src = src;
@@ -123,7 +131,18 @@ export function Halftone({
     return () => {
       cancelled = true;
     };
-  }, [src, cols, aspect, contrast, brightness, focusX, focusY, zoom, sharpen]);
+  }, [
+    src,
+    cell,
+    aspect,
+    contrast,
+    brightness,
+    focusX,
+    focusY,
+    zoom,
+    sharpen,
+    dotScale,
+  ]);
 
   if (failed) {
     return (
@@ -141,7 +160,7 @@ export function Halftone({
       ref={ref}
       role="img"
       aria-label={alt}
-      className={`w-full [image-rendering:pixelated] ${className ?? ""}`}
+      className={`w-full ${className ?? ""}`}
       style={{ aspectRatio: `${aspect}` }}
     />
   );
