@@ -26,6 +26,7 @@ export function Halftone({
   focusX = 0.5,
   focusY = 0.5,
   zoom = 1,
+  sharpen = 0.9,
   className,
 }: {
   src: string;
@@ -41,6 +42,9 @@ export function Halftone({
   focusY?: number;
   /** >1 crops in tighter than cover-fit, so you can frame a face. */
   zoom?: number;
+  /** Unsharp-mask strength. 1-bit dithering destroys soft edges, so edges
+   *  have to be crisped up before thresholding or the face reads as mush. */
+  sharpen?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -71,13 +75,42 @@ export function Halftone({
 
       const frame = ctx.getImageData(0, 0, w, h);
       const p = frame.data;
+
+      // 1. luminance
+      const lum = new Float32Array(w * h);
+      for (let i = 0, j = 0; j < lum.length; i += 4, j++) {
+        lum[j] = 0.299 * p[i] + 0.587 * p[i + 1] + 0.114 * p[i + 2];
+      }
+
+      // 2. unsharp mask against a 3x3 box blur
+      const blur = new Float32Array(w * h);
       for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
-          const i = (y * w + x) * 4;
-          const lum = 0.299 * p[i] + 0.587 * p[i + 1] + 0.114 * p[i + 2];
-          const adj = (lum - 128) * contrast + 128 + brightness;
+          let sum = 0;
+          let n = 0;
+          for (let dy = -1; dy <= 1; dy++) {
+            const yy = y + dy;
+            if (yy < 0 || yy >= h) continue;
+            for (let dx = -1; dx <= 1; dx++) {
+              const xx = x + dx;
+              if (xx < 0 || xx >= w) continue;
+              sum += lum[yy * w + xx];
+              n++;
+            }
+          }
+          blur[y * w + x] = sum / n;
+        }
+      }
+
+      // 3. sharpen, then levels, then dither
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const j = y * w + x;
+          const sharp = lum[j] + sharpen * (lum[j] - blur[j]);
+          const adj = (sharp - 128) * contrast + 128 + brightness;
           const threshold = ((BAYER8[y & 7][x & 7] + 0.5) / 64) * 255;
           const v = adj > threshold ? 255 : 0;
+          const i = j * 4;
           p[i] = p[i + 1] = p[i + 2] = v;
           p[i + 3] = 255;
         }
@@ -90,7 +123,7 @@ export function Halftone({
     return () => {
       cancelled = true;
     };
-  }, [src, cols, aspect, contrast, brightness, focusX, focusY, zoom]);
+  }, [src, cols, aspect, contrast, brightness, focusX, focusY, zoom, sharpen]);
 
   if (failed) {
     return (
