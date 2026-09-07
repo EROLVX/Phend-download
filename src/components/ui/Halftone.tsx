@@ -10,6 +10,13 @@ import { useEffect, useRef, useState } from "react";
  * size and tone is faked by scattering them. That reads as speckle on a face.
  * Varying the dot size instead renders smooth tone and stays legible.
  */
+// Cheap deterministic value noise, so the grain is stable across renders
+// instead of reshuffling every time the component re-runs.
+function hashNoise(x: number, y: number) {
+  const v = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+  return v - Math.floor(v);
+}
+
 export function Halftone({
   src,
   alt,
@@ -26,6 +33,9 @@ export function Halftone({
   sharpen = 0.7,
   /** Dot radius multiplier. Above ~0.71 the darkest dots start to touch. */
   dotScale = 0.78,
+  /** Grain strength, in luminance units, ramped from 0 at the top of the
+   *  frame to full at the bottom so the figure dissolves downward. */
+  noise = 0,
   className,
 }: {
   src: string;
@@ -39,6 +49,7 @@ export function Halftone({
   zoom?: number;
   sharpen?: number;
   dotScale?: number;
+  noise?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -114,7 +125,10 @@ export function Halftone({
         for (let x = 0; x < gw; x++) {
           const j = y * gw + x;
           const sharp = lum[j] + sharpen * (lum[j] - blur[j]);
-          const adj = (sharp - 128) * contrast + 128 + brightness;
+          // ramp^1.8 keeps the top clean and concentrates grain low down
+          const ramp = gh > 1 ? Math.pow(y / (gh - 1), 1.8) : 0;
+          const grain = noise * ramp * hashNoise(x, y);
+          const adj = (sharp - 128) * contrast + 128 + brightness + grain;
           const t = Math.min(1, Math.max(0, adj / 255));
           if (t <= 0.012) continue;
           // sqrt so dot *area* tracks brightness, which is what the eye reads
@@ -142,6 +156,7 @@ export function Halftone({
     zoom,
     sharpen,
     dotScale,
+    noise,
   ]);
 
   if (failed) {

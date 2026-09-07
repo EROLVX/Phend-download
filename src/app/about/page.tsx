@@ -58,6 +58,7 @@ export default function AboutPage() {
                     contrast={1.42}
                     brightness={-26}
                     sharpen={0.85}
+                    noise={85}
                   />
                 </div>
               </Reveal>
