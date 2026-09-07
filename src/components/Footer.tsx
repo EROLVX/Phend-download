@@ -34,8 +34,13 @@ export function Footer() {
         </div>
 
         <p className="text-[12px] text-white/30">
-          Built with <span className="text-danger">&hearts;</span> by the
-          Phend team
+          Built by{" "}
+          <a
+            href="/about"
+            className="text-white/50 underline-offset-4 transition-colors hover:text-white hover:underline"
+          >
+            James Erol Lagonero
+          </a>
         </p>
       </div>
 

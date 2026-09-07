@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Badge } from "@/components/ui/Badge";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Menu, X } from "lucide-react";
 import { GithubIcon } from "@/components/ui/GithubIcon";
 import { cn } from "@/lib/utils";
 
+// Root-relative so they still resolve from /about, not just the home page.
 const links = [
-  { label: "Features", href: "#how-it-works" },
-  { label: "Download", href: "#download" },
-  { label: "Installation", href: "#installation" },
-  { label: "Guide", href: "#guide" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Features", href: "/#how-it-works" },
+  { label: "Download", href: "/#download" },
+  { label: "Installation", href: "/#installation" },
+  { label: "Guide", href: "/#guide" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export function Navbar() {
@@ -37,13 +38,10 @@ export function Navbar() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-6">
-        <a href="#top" className="flex items-center gap-2">
+        <Link href="/#top" className="flex items-center gap-2">
           <Image src="/icons/pshld-logo.png" alt="Phend" width={38} height={38} className="h-10 w-10" />
           <span className="text-[15px] font-semibold tracking-tight">Phend</span>
-          <Badge tone="warning" className="ml-1 hidden sm:inline-flex">
-            Beta
-          </Badge>
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
           {links.map((link) => (
@@ -67,7 +65,7 @@ export function Navbar() {
           >
             <GithubIcon className="h-[20px] w-[20px]" />
           </a>
-          <Button href="#download" size="sm">
+          <Button href="/#download" size="sm">
             Download
           </Button>
         </div>
@@ -94,7 +92,7 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
-            <Button href="#download" size="sm" className="mt-2 w-full">
+            <Button href="/#download" size="sm" className="mt-2 w-full">
               Download
             </Button>
           </nav>

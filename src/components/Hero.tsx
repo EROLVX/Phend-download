@@ -36,8 +36,8 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-10 px-6 sm:gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <Reveal>
-            <Badge tone="warning" className="mb-5 sm:mb-6">
-              Beta · Chrome &amp; Edge compatible
+            <Badge tone="neutral" className="mb-5 sm:mb-6">
+              Chrome &amp; Edge compatible
             </Badge>
           </Reveal>
 
