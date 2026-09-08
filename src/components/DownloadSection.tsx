@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getRelease, RELEASES_URL } from "@/lib/release";
+import { LiveDownloads } from "@/components/ui/LiveDownloads";
 
 export async function DownloadSection() {
   // Version, size, date and the download count all come from the GitHub
@@ -12,16 +13,21 @@ export async function DownloadSection() {
   const release = await getRelease();
   const href = release?.assetUrl ?? RELEASES_URL;
 
-  // `pixel` renders the value in the Silkscreen display face.
-  const meta: { label: string; value: string; pixel?: boolean }[] = [
+  // `pixel` renders the value in the Silkscreen display face; `node` lets a
+  // cell render a component instead of static text.
+  const meta: {
+    label: string;
+    value?: string;
+    pixel?: boolean;
+    node?: React.ReactNode;
+  }[] = [
     { label: "Latest version", value: release?.version ?? "1.0.0" },
     { label: "Platform", value: "Chrome / Edge" },
     { label: "File size", value: release?.sizeLabel ?? "—" },
     { label: "Last updated", value: release?.updatedLabel ?? "—" },
     {
       label: "Downloads",
-      value: release ? release.downloads.toLocaleString("en-US") : "—",
-      pixel: true,
+      node: <LiveDownloads initial={release?.downloads ?? null} />,
     },
   ];
 
@@ -191,7 +197,7 @@ export async function DownloadSection() {
                       item.pixel && "font-display text-[15px] tracking-wide"
                     )}
                   >
-                    {item.value}
+                    {item.node ?? item.value}
                   </p>
                 </div>
               ))}

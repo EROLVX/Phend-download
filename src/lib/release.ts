@@ -1,4 +1,4 @@
-const REPO = "EROLVX/Phend-download";
+export const REPO = "EROLVX/Phend-download";
 const RELEASES_PAGE = `https://github.com/${REPO}/releases`;
 
 export type ReleaseInfo = {
