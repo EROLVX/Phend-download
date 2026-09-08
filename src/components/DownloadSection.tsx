@@ -3,18 +3,28 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Badge } from "@/components/ui/Badge";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getRelease, RELEASES_URL } from "@/lib/release";
 
-// `pixel` renders the value in the Silkscreen display face. Swap the
-// Downloads value for the live count once the Supabase table exists.
-const meta: { label: string; value: string; pixel?: boolean }[] = [
-  { label: "Latest version", value: "1.0.0" },
-  { label: "Platform", value: "Chrome / Edge" },
-  { label: "File size", value: "—" },
-  { label: "Last updated", value: "—" },
-  { label: "Downloads", value: "0", pixel: true },
-];
+export async function DownloadSection() {
+  // Version, size, date and the download count all come from the GitHub
+  // release. If GitHub is unreachable the page still renders and the buttons
+  // fall back to the releases listing.
+  const release = await getRelease();
+  const href = release?.assetUrl ?? RELEASES_URL;
 
-export function DownloadSection() {
+  // `pixel` renders the value in the Silkscreen display face.
+  const meta: { label: string; value: string; pixel?: boolean }[] = [
+    { label: "Latest version", value: release?.version ?? "1.0.0" },
+    { label: "Platform", value: "Chrome / Edge" },
+    { label: "File size", value: release?.sizeLabel ?? "—" },
+    { label: "Last updated", value: release?.updatedLabel ?? "—" },
+    {
+      label: "Downloads",
+      value: release ? release.downloads.toLocaleString("en-US") : "—",
+      pixel: true,
+    },
+  ];
+
   return (
     <section
       id="download"
@@ -115,13 +125,16 @@ export function DownloadSection() {
 
             <div className="relative flex items-center justify-between">
               <Badge tone="warning">Beta build</Badge>
-              <span className="text-xs text-white/35">dist.zip · unpacked extension</span>
+              <span className="text-xs text-white/35">
+                {release?.assetName ?? "dist.zip"} · unpacked extension
+              </span>
             </div>
 
             <div className="relative mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-3">
               <a
-                href="/downloads/phend.zip"
-                download
+                href={href}
+                target="_blank"
+                rel="noreferrer"
                 className="group relative flex items-center gap-3 sm:gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] sm:p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
               >
                 <span className="relative h-7 w-7 shrink-0 sm:h-9 sm:w-9">
@@ -138,8 +151,9 @@ export function DownloadSection() {
               </a>
 
               <a
-                href="/downloads/phend.zip"
-                download
+                href={href}
+                target="_blank"
+                rel="noreferrer"
                 className="group relative flex items-center gap-3 sm:gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] sm:p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
               >
                 <span className="relative h-7 w-7 shrink-0 sm:h-9 sm:w-9">
