@@ -77,8 +77,8 @@ export function LiveDownloads({ initial }: { initial: number | null }) {
     <span className="inline-flex items-center gap-1.5">
       <span
         className={cn(
-          "font-display text-[15px] tracking-wide transition-colors duration-300",
-          bumped ? "text-success" : "text-white"
+          "font-display text-[15px] tracking-wide text-white transition-all duration-300",
+          bumped && "drop-shadow-[0_0_9px_rgba(255,255,255,0.85)]"
         )}
       >
         {count === null ? "—" : count.toLocaleString("en-US")}
@@ -88,8 +88,8 @@ export function LiveDownloads({ initial }: { initial: number | null }) {
         aria-hidden
         title="Updating live"
       >
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success/70" />
-        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/50" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white/80" />
       </span>
     </span>
   );

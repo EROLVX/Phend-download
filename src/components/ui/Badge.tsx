@@ -10,19 +10,29 @@ const tones = {
   accent: "bg-accent/10 text-accent border-accent/20",
 };
 
+// The popup mock is scaled by a CSS transform, so its badges must NOT shrink
+// again on small screens - the transform already handles that.
+const sizes = {
+  auto: "px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[11px]",
+  fixed: "px-2.5 py-1 text-[11px]",
+};
+
 export function Badge({
   children,
   tone = "neutral",
+  size = "auto",
   className,
 }: {
   children: ReactNode;
   tone?: keyof typeof tones;
+  size?: keyof typeof sizes;
   className?: string;
 }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide",
+        "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border font-medium uppercase tracking-wide",
+        sizes[size],
         tones[tone],
         className
       )}

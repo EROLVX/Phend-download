@@ -246,7 +246,7 @@ export function PopupPreview() {
               </div>
 
               <div className="mt-4 rounded-xl border border-danger/40 bg-danger/[0.06] p-4">
-                <Badge tone="danger">Phishing</Badge>
+                <Badge tone="danger" size="fixed">Phishing</Badge>
                 <p className="mt-3 truncate text-[15px] font-semibold text-white">
                   {URL_TEXT}
                 </p>
@@ -304,7 +304,7 @@ export function PopupPreview() {
               className="absolute inset-0 p-5"
             >
               <div className="flex items-center justify-between">
-                <Badge tone="danger">Phishing</Badge>
+                <Badge tone="danger" size="fixed">Phishing</Badge>
                 <span className="text-[11px] text-white/50">High</span>
               </div>
               <p className="mt-2 truncate text-[14.5px] font-semibold text-white">

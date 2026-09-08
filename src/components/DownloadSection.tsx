@@ -129,9 +129,9 @@ export async function DownloadSection() {
               aria-hidden
             />
 
-            <div className="relative flex items-center justify-between">
+            <div className="relative flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
               <Badge tone="warning">Beta build</Badge>
-              <span className="text-xs text-white/35">
+              <span className="break-all text-[10.5px] text-white/35 sm:break-normal sm:text-xs">
                 {release?.assetName ?? "dist.zip"} · unpacked extension
               </span>
             </div>
