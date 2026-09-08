@@ -45,15 +45,15 @@ function formatDate(iso: string) {
  * downloads, so this replaces a database, an API route, and the rate limiting
  * that would come with them.
  *
- * Unauthenticated API calls are capped at 60/hour, so this is cached for an
- * hour rather than fetched per visitor — that also means there is no
+ * Unauthenticated API calls are capped at 60/hour, so this is cached for five
+ * minutes rather than fetched per visitor (at most 12 calls/hour) — that also means there is no
  * per-request work for anyone to flood.
  */
 export async function getRelease(): Promise<ReleaseInfo | null> {
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}/releases`, {
       headers: { Accept: "application/vnd.github+json" },
-      next: { revalidate: 3600 },
+      next: { revalidate: 300 },
     });
     if (!res.ok) return null;
 

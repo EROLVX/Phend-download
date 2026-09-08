@@ -178,7 +178,7 @@ function BrowserTile({
       onHoverEnd={() => setHovered(false)}
     >
       <motion.div
-        className={`relative flex items-center justify-center border border-white/[0.08] bg-card ${sizeClasses[size]}`}
+        className={`relative flex items-center justify-center bg-card ${sizeClasses[size]}`}
         animate={reduceMotion ? undefined : hovered ? hoverAnimate : idleAnimate}
         transition={reduceMotion ? undefined : hovered ? hoverTransition : idleTransition}
       >
