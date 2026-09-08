@@ -133,7 +133,10 @@ export async function DownloadSection() {
             <div className="relative mt-6 grid gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-3">
               <a
                 href={href}
-                target="_blank"
+                // No target="_blank": GitHub serves the asset with
+                // Content-Disposition: attachment, so a plain click downloads
+                // it in place. A new tab would flash open and shut, which
+                // reads as "nothing happened".
                 rel="noreferrer"
                 className="group relative flex items-center gap-3 sm:gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] sm:p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
               >
@@ -152,7 +155,10 @@ export async function DownloadSection() {
 
               <a
                 href={href}
-                target="_blank"
+                // No target="_blank": GitHub serves the asset with
+                // Content-Disposition: attachment, so a plain click downloads
+                // it in place. A new tab would flash open and shut, which
+                // reads as "nothing happened".
                 rel="noreferrer"
                 className="group relative flex items-center gap-3 sm:gap-4 overflow-hidden rounded-xl border border-white/[0.1] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.06),rgba(255,255,255,0.015))] p-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] sm:p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-white/25 hover:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.1),rgba(255,255,255,0.03))] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),0_10px_30px_-12px_rgba(0,0,0,0.9)]"
               >
