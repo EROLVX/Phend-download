@@ -17,7 +17,9 @@ const links = [
   { label: "FAQ", href: "/#faq" },
 ];
 
-export function Navbar() {
+export function Navbar({ downloadUrl }: { downloadUrl?: string }) {
+  // Falls back to the in-page section if no release URL was passed in.
+  const dl = downloadUrl ?? "/#download";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -65,7 +67,7 @@ export function Navbar() {
           >
             <GithubIcon className="h-[20px] w-[20px]" />
           </a>
-          <Button href="/#download" size="sm">
+          <Button href={dl} size="sm">
             Download
           </Button>
         </div>
@@ -93,7 +95,7 @@ export function Navbar() {
               </a>
             ))}
             <Button
-              href="/#download"
+              href={dl}
               size="sm"
               className="mt-2 w-full"
               onClick={() => setOpen(false)}

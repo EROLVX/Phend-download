@@ -4,8 +4,14 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { HeroGrid } from "@/components/ui/HeroGrid";
 import { PopupPreview } from "@/components/PopupPreview";
+import { getRelease, RELEASES_URL } from "@/lib/release";
 
-export function Hero() {
+export async function Hero() {
+  // Same asset the Get Phend card serves, so every Download button on the
+  // site downloads rather than navigating.
+  const release = await getRelease();
+  const href = release?.assetUrl ?? RELEASES_URL;
+
   return (
     <section
       id="top"
@@ -58,13 +64,13 @@ export function Hero() {
 
           <Reveal delay={0.15}>
             <div className="mt-6 flex flex-wrap items-center gap-2 sm:mt-9 sm:gap-3">
-              <Button href="#download" size="lg">
+              <Button href={href} size="lg">
                 <span className="relative h-4 w-4 shrink-0 sm:h-[18px] sm:w-[18px]">
                   <Image src="/icons/browsers/chrome.png" alt="" fill sizes="18px" className="object-contain" />
                 </span>
                 Download for Chrome
               </Button>
-              <Button href="#download" variant="secondary" size="lg">
+              <Button href={href} variant="secondary" size="lg">
                 <span className="relative h-4 w-4 shrink-0 sm:h-[18px] sm:w-[18px]">
                   <Image src="/icons/browsers/edge.png" alt="" fill sizes="18px" className="object-contain" />
                 </span>

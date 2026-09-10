@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GridBackground } from "@/components/ui/GridBackground";
 import { Navbar } from "@/components/Navbar";
+import { getRelease, RELEASES_URL } from "@/lib/release";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/ui/Reveal";
 import { Halftone } from "@/components/ui/Halftone";
@@ -20,11 +21,13 @@ const socials = [
   { label: "linkedin", href: "" },
 ].filter((s) => s.href);
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const release = await getRelease();
+  const downloadUrl = release?.assetUrl ?? RELEASES_URL;
   return (
     <>
       <GridBackground />
-      <Navbar />
+      <Navbar downloadUrl={downloadUrl} />
       <main className="flex-1">
         <section id="top" className="relative border-b border-white/[0.06] pt-32 pb-20 sm:pt-40 sm:pb-28 lg:pt-48 lg:pb-32">
           {/* same corner light as the hero, so the page feels part of the site */}
