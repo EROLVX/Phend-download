@@ -92,7 +92,12 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
-            <Button href="/#download" size="sm" className="mt-2 w-full">
+            <Button
+              href="/#download"
+              size="sm"
+              className="mt-2 w-full"
+              onClick={() => setOpen(false)}
+            >
               Download
             </Button>
           </nav>

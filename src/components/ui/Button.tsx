@@ -30,6 +30,7 @@ export function Button({
   size = "md",
   href,
   className,
+  onClick,
   ...props
 }: {
   children: ReactNode;
@@ -37,19 +38,22 @@ export function Button({
   size?: keyof typeof sizes;
   href?: string;
   className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  onClick?: () => void;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick">) {
   const classes = cn(base, variants[variant], sizes[size], className);
 
+  // onClick has to reach the Link branch as well. It used to live in ...props,
+  // which is only spread onto <button>, so a linked Button silently ignored it.
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} onClick={onClick}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button className={classes} {...props}>
+    <button className={classes} onClick={onClick} {...props}>
       {children}
     </button>
   );
